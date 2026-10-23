@@ -80,6 +80,6 @@ releases no longer accept. The HTML export shows the original outputs.
 
 ## License
 
-The notebooks and project files are released under the [MIT License](LICENSE).
-The two datasets come from third parties and keep the terms of their original
-sources.
+No license. This is group coursework, and reusing it needs permission from
+every member of the group. The two datasets come from third parties and keep
+the terms of their original sources.
