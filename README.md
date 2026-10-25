@@ -31,31 +31,43 @@ on current versions.
 `Final Code File.ipynb` works through five stages:
 
 1. Preprocessing: merges the `Date` and `Time` columns into a datetime index
-   and checks for missing values (there are none).
-2. Visualization: seaborn charts of sales, ratings, payment methods, customer
-   type and gender by branch, city and product line.
+   (adding random seconds, since the data has only hours and minutes) and
+   checks for missing values (there are none).
+2. Visualization: seaborn charts of sales, ratings, payment methods and
+   customer type by branch and city, and of sales, ratings and gender by
+   product line.
 3. Analysis: correlation and covariance, and revenue, gross income and rating
    grouped by city and product line.
 4. Models:
    - Six research questions (busiest days, average transaction, member vs
      non-member sales, monthly branch averages, and so on). The notebook
      labels this section "Linear Regression", but it answers the questions
-     with pandas grouping and resampling; no regression model is fitted.
-   - K-Means clustering (scikit-learn), choosing the number of clusters with
-     silhouette scores and the elbow method.
+     with pandas grouping and resampling; no regression model is fitted. The
+     member vs non-member chart plots each group's largest single sale, not
+     total sales.
+   - K-Means clustering (scikit-learn) on quantity, total, gross income,
+     rating and the city coordinates. The clusters used in the plots come
+     from a model with a random number of clusters (8 in the saved run). The
+     notebook then computes silhouette scores and inertia for 5 to 99
+     clusters (best silhouette at 7 unscaled, 5 scaled) and fits a final
+     99-cluster model, but it never refits or re-plots with the chosen
+     number.
    - A random forest regressor predicting `Rating` from product line, unit
      price, quantity, tax, customer type and city. The target is one-hot
      encoded with `pd.get_dummies`, so the reported mean absolute error of
      0.032 is averaged over indicator columns, not measured on the rating
      scale.
    - Anomaly detection on `gross margin percentage` with an Isolation Forest,
-     plus box and scatter plots.
+     plus box and scatter plots. That column has the same value (4.76%) in
+     every row, so "no outliers" is the only possible result.
 5. Discussion and conclusion.
 
 ### RapidMiner project
 
 `DataMiningProject/` is a RapidMiner Studio repository. `Processes/Load Dataset`
-reads the CSV and stores it; `Processes/Results/` holds Auto Model output for
+reads the CSV and stores it. `Models.rmp`, despite its name, is a Turbo Prep
+data-preparation export (type conversion, PCA, normalization) and trains no
+model. `Processes/Results/` holds Auto Model output for
 predicting `Customer type` (Member or Normal) with nine models: Decision Tree,
 Deep Learning, Fast Large Margin, Generalized Linear Model, Gradient Boosted
 Trees, Logistic Regression, Naive Bayes, Random Forest and Support Vector
@@ -72,6 +84,9 @@ Before running, change the `pd.read_csv(...)` path in the notebook to
 `supermarket_sales.csv`. It currently points to an absolute Windows path on
 the original author's machine. The RapidMiner `Load Dataset` process has the
 same absolute path in its Read CSV operator.
+
+The "busiest day" cell saves one `busy_store_<date>.jpg` per day (89 files)
+into the working folder; `.gitignore` excludes them.
 
 On current library versions some cells fail without changes. For example,
 the first cell imports `statsmodels.tsa.arima_model`, which statsmodels 0.13

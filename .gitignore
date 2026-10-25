@@ -3,3 +3,6 @@
 
 # Python bytecode
 __pycache__/
+
+# Charts written by the "busiest day" cell of Final Code File.ipynb
+busy_store_*.jpg
